@@ -1,6 +1,6 @@
 {
   "name": "pen-and-paper",
-  "homepage": "https://IHR_USERNAME.github.io/pen-and-paper",
+  "homepage": "https://MBlil55.github.io/pen-and-paper",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
