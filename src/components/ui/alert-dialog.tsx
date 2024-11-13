@@ -7,8 +7,7 @@ export interface AlertDialogProps {
 }
 
 export const AlertDialog: React.FC<AlertDialogProps> = ({ 
-  open, 
-  onOpenChange, 
+  open,  
   children 
 }) => {
   if (!open) return null;

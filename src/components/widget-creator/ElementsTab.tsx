@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, X, Move, Settings, ChevronDown } from 'lucide-react';
+import { Plus, X, Move, ChevronDown } from 'lucide-react';
 import type { WidgetElement } from './types';
 
 // 1. Interfaces
@@ -203,11 +203,13 @@ interface ElementPropertiesProps {
     onUpdateElement,
   }) => {
     // Hilfsfunktion für Updates
-    const updateProperty = <K extends keyof WidgetElement>(
+    const updateProperty = <K extends ElementProperty>(
+      id: string,
       property: K,
-      value: WidgetElement[K]
+      value: any,
+      onUpdateElement: (id: string, updates: Partial<WidgetElement>) => void
     ) => {
-      onUpdateElement(element.id, { [property]: value });
+      onUpdateElement(id, { [property]: value });
     };
   
     return (

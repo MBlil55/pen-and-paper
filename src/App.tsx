@@ -1,12 +1,12 @@
-import React from 'react';
+import { type FC } from 'react';
 import ModernCharacterSheet from './layouts/GridLayout';
 
-function App() {
+const App: FC = () => {
   return (
     <div>
       <ModernCharacterSheet />
     </div>
   );
-}
+};
 
 export default App;
