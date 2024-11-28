@@ -12,7 +12,8 @@ const WIDGET_TYPES = {
   DICE: 'dice',
   DAMAGE: 'damage',
   NOTES: 'notes',
-  HEALTH: 'health'
+  HEALTH: 'health',
+  GEAR: 'gear'
 };
 
 const AddWidgetButton: React.FC<AddWidgetButtonProps> = ({ onAdd }) => {

@@ -25,7 +25,6 @@ const getInitialData = (title: string): SavedSkillTreeData => {
     const savedData = localStorage.getItem(`skillTree-${title.toLowerCase()}`);
     if (savedData) {
       const parsedData = JSON.parse(savedData);
-      console.log('Geladene Daten:', parsedData);
       return parsedData;
     }
   } catch (error) {

@@ -1,4 +1,3 @@
-// src/components/character/BasicInfo.tsx
 import React from 'react';
 import { Camera } from 'lucide-react';
 

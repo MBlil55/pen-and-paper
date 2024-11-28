@@ -1,0 +1,236 @@
+/* Widget Transitions */
+.widget-transition {
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top center;
+  }
+  
+  /* Minimized State */
+  .widget-minimized {
+    max-height: 48px !important;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .widget-minimized .widget-content {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  /* Closing Animation */
+  .widget-closing {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
+  
+  /* Header Hover Effects */
+  .widget-handle:hover {
+    background-color: rgba(243, 244, 246, 0.8);
+  }
+  
+  /* Button Hover Animations */
+  .widget-button {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .widget-button:hover {
+    transform: translateY(-1px);
+  }
+  
+  .widget-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Minimize/Maximize Animation */
+  @keyframes minimize {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes maximize {
+    0% {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  /* Smooth Resizing */
+  .widget-content {
+    transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Focus States */
+  .widget-focused {
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+  }
+  
+  /* Loading States */
+  .widget-loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 640px) {
+    .widget-minimized {
+      max-height: 40px !important;
+    }
+  }
+  
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .widget-transition,
+    .widget-content,
+    .widget-button {
+      transition: none !important;
+    }
+  }
+  
+  /* Visuelles Feedback während des Dragging */
+  .widget-dragging {
+    opacity: 0.8;
+    cursor: grabbing !important;
+  }
+  
+  .widget-drag-handle:hover {
+    cursor: grab;
+  }
+  
+  .widget-dragging .widget-drag-handle {
+    cursor: grabbing;
+  }
+  
+  /* Verbesserte Touch-Unterstützung */
+  @media (pointer: coarse) {
+    .widget-drag-handle {
+      min-height: 44px; /* Bessere Touch-Targets */
+    }
+    
+    .widget-button {
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .widget-handle {
+    max-width: calc(100% - 80px); /* Platz für Buttons reservieren */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+  }
+
+  /* Explizit Pointer-Events für Buttons aktivieren */
+.widget-handle ~ div {
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Style für den aktiven Drag-Zustand */
+  .widget-handle:active {
+    cursor: grabbing;
+  }
+  
+  /* Verhindere Text-Selektion während des Draggings */
+  .widget-handle * {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Widget Scroll Styles */
+.widget {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  /* Smooth transitions */
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+  
+  /* Custom scrollbar styling */
+  .overflow-auto {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(203, 213, 225, 1) transparent;
+  }
+  
+  .overflow-auto::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .overflow-auto::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .overflow-auto::-webkit-scrollbar-thumb {
+    background-color: rgba(203, 213, 225, 1);
+    border-radius: 3px;
+  }
+  
+  /* Optimized for touch devices */
+  @media (pointer: coarse) {
+    .overflow-auto::-webkit-scrollbar {
+      width: 8px;
+    }
+  }
+
+  /* Drag & Resize States */
+.widget-dragging,
+.widget-resizing {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+.widget-dragging {
+  cursor: grabbing !important;
+}
+
+.widget-dragging * {
+  cursor: grabbing !important;
+}
+
+/* Performance Optimierungen */
+.widget-dragging,
+.widget-resizing {
+  will-change: transform;
+}
+
+/* Header immer nicht selektierbar */
+.widget-handle {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+/* Buttons bleiben interaktiv */
+.widget-button {
+  user-select: none !important;
+  cursor: pointer !important;
+}

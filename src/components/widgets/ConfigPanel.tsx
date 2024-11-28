@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import {
-  Settings,
-  Save,
-  X,
-  Palette,
-  Layout,
-  Shield,
-  Heart,
-} from "lucide-react";
+import { Settings, Save, X, Palette, Layout, Sparkles } from "lucide-react";
+import EffectListTab from "./effectStatus/EffectListTab";
+import EffectCreatorTab from "./effectStatus/EffectCreatorTab";
+import { Effect } from "./effectStatus/types/effectTypes";
 
 export interface CharacterConfig {
   theme: {
@@ -37,143 +32,29 @@ export interface CharacterConfig {
     class: string;
     path: string;
   };
-}
-
-interface LevelSystemProps {
-  currentExp: number;
-  onExpChange: (exp: number) => void;
-}
-
-const POINTS_PER_LEVEL = 25;
-
-const LevelSystem: React.FC<LevelSystemProps> = ({
-  currentExp,
-  onExpChange,
-}) => {
-  const calculateLevel = (exp: number) =>
-    Math.floor(exp / POINTS_PER_LEVEL) + 1;
-  const calculateExpForNextLevel = (level: number) => level * POINTS_PER_LEVEL;
-
-  const level = calculateLevel(currentExp);
-  const expForNextLevel = calculateExpForNextLevel(level);
-  const expInCurrentLevel = currentExp % POINTS_PER_LEVEL;
-
-  return (
-    <div className="space-y-1 mb-4">
-      {/* Level Badge und EXP Input */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-1.5">
-          <Trophy className="w-4 h-4 text-yellow-500" />
-          <span className="text-sm font-medium">Level {level}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="number"
-            value={currentExp}
-            onChange={(e) => {
-              const newExp = Math.max(0, parseInt(e.target.value) || 0);
-              onExpChange(newExp);
-            }}
-            className="w-20 px-2 py-0.5 text-sm border rounded-md focus:ring-1 
-                     focus:ring-yellow-400 focus:outline-none"
-          />
-          <span className="text-xs text-gray-500">Punkte</span>
-        </div>
-      </div>
-
-      {/* EXP Bar */}
-      <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
-        <div
-          className="absolute h-full bg-gradient-to-r from-yellow-400 to-yellow-500
-                   transition-all duration-300"
-          style={{ width: `${(expInCurrentLevel / POINTS_PER_LEVEL) * 100}%` }}
-        >
-          <div className="absolute inset-0 animate-pulse bg-white/20" />
-        </div>
-      </div>
-
-      {/* EXP Info */}
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>
-          {expInCurrentLevel} / {POINTS_PER_LEVEL} Punkte
-        </span>
-        <span>
-          {POINTS_PER_LEVEL - expInCurrentLevel} bis Level {level + 1}
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const CharacterTab: React.FC<{
-  config: CharacterConfig;
-  onUpdateConfig: (updates: Partial<CharacterConfig>) => void;
-}> = ({ config, onUpdateConfig }) => {
-  // Predefined options
-  const CHARACTER_OPTIONS = {
-    races: ['Mensch', 'Elf', 'Zwerg', 'Ork', 'Halbling'],
-    classes: ['Magier', 'Krieger', 'Schurke', 'Kleriker', 'Druide'],
-    paths: ['Wanderer', 'Gelehrter', 'Söldner', 'Händler', 'Adliger']
+  effectStatus: {
+    enabled: boolean;
+    displayMode: {
+      showIcons: boolean;
+      showCounters: boolean;
+      showTooltips: boolean;
+    };
+    position: {
+      top: boolean;
+      right: boolean;
+      bottom: boolean;
+      left: boolean;
+    };
+    categories: {
+      buffs: boolean;
+      debuffs: boolean;
+      combat: boolean;
+      special: boolean;
+      defense: boolean;
+      health: boolean;
+    };
   };
-
-  const updateCharacter = (key: keyof CharacterConfig['character'], value: string) => {
-    onUpdateConfig({
-      character: {
-        ...config.character,
-        [key]: value
-      }
-    });
-  };
-
-  return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-medium">Charakter Einstellungen</h3>
-
-      {/* Rasse */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Rasse</label>
-        <select
-          value={config.character.race}
-          onChange={(e) => updateCharacter('race', e.target.value)}
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg"
-        >
-          {CHARACTER_OPTIONS.races.map(race => (
-            <option key={race} value={race}>{race}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Klasse */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Klasse</label>
-        <select
-          value={config.character.class}
-          onChange={(e) => updateCharacter('class', e.target.value)}
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg"
-        >
-          {CHARACTER_OPTIONS.classes.map(characterClass => (
-            <option key={characterClass} value={characterClass}>{characterClass}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Pfad */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Pfad</label>
-        <select
-          value={config.character.path}
-          onChange={(e) => updateCharacter('path', e.target.value)}
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg"
-        >
-          {CHARACTER_OPTIONS.paths.map(path => (
-            <option key={path} value={path}>{path}</option>
-          ))}
-        </select>
-      </div>
-    </div>
-  );
-};
-
+}
 
 interface ConfigPanelProps {
   isOpen: boolean;
@@ -188,16 +69,108 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
   config,
   onSave,
 }) => {
-  const [activeTab, setActiveTab] = useState<"theme" | "defaults" | "display" | "character">(
-    "theme"
+  const [activeTab, setActiveTab] = useState<
+    "theme" | "defaults" | "display" | "effects"
+  >("theme");
+  const [activeEffectTab, setActiveEffectTab] = useState<
+    "list" | "creator" | null
+  >(null);
+  const [editingEffect, setEditingEffect] = useState<Effect | undefined>(
+    undefined
   );
+
+  const handleEditEffect = (effect: Effect) => {
+    setEditingEffect(effect);
+    setActiveEffectTab("creator");
+  };
+
+  // Handler für das Schließen des Effect Managements
+  const handleCloseEffectManagement = () => {
+    setActiveEffectTab(null);
+    setEditingEffect(undefined);
+  };
+
+  const tabs = [
+    { id: "theme", label: "Design", icon: Palette },
+    { id: "defaults", label: "Standardwerte", icon: Settings },
+    { id: "display", label: "Anzeige", icon: Layout },
+    { id: "effects", label: "Status Effekte", icon: Sparkles },
+  ];
+
   const [localConfig, setLocalConfig] = useState<CharacterConfig>(config);
+
+  interface LevelSystemProps {
+    currentExp: number;
+    onExpChange: (exp: number) => void;
+  }
+
+  const POINTS_PER_LEVEL = 25;
+
+  const LevelSystem: React.FC<LevelSystemProps> = ({
+    currentExp,
+    onExpChange,
+  }) => {
+    const calculateLevel = (exp: number) =>
+      Math.floor(exp / POINTS_PER_LEVEL) + 1;
+    const calculateExpForNextLevel = (level: number) =>
+      level * POINTS_PER_LEVEL;
+
+    const level = calculateLevel(currentExp);
+    const expInCurrentLevel = currentExp % POINTS_PER_LEVEL;
+
+    return (
+      <div className="space-y-1 mb-4">
+        {/* Level Badge und EXP Input */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-1.5">
+            <Trophy className="w-4 h-4 text-yellow-500" />
+            <span className="text-sm font-medium">Level {level}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              value={currentExp}
+              onChange={(e) => {
+                const newExp = Math.max(0, parseInt(e.target.value) || 0);
+                onExpChange(newExp);
+              }}
+              className="w-20 px-2 py-0.5 text-sm border rounded-md focus:ring-1 
+                     focus:ring-yellow-400 focus:outline-none"
+            />
+            <span className="text-xs text-gray-500">Punkte</span>
+          </div>
+        </div>
+
+        {/* EXP Bar */}
+        <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div
+            className="absolute h-full bg-gradient-to-r from-yellow-400 to-yellow-500
+                   transition-all duration-300"
+            style={{
+              width: `${(expInCurrentLevel / POINTS_PER_LEVEL) * 100}%`,
+            }}
+          >
+            <div className="absolute inset-0 animate-pulse bg-white/20" />
+          </div>
+        </div>
+
+        {/* EXP Info */}
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>
+            {expInCurrentLevel} / {POINTS_PER_LEVEL} Punkte
+          </span>
+          <span>
+            {POINTS_PER_LEVEL - expInCurrentLevel} bis Level {level + 1}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   const handleSave = () => {
     onSave(localConfig);
     onClose();
   };
-
 
   if (!isOpen) return null;
 
@@ -221,7 +194,7 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
           <div className="w-48 border-r bg-gray-50 p-4">
             <nav className="space-y-1">
               <button
-                onClick={() => setActiveTab("theme")}
+//                onClick={() => setActiveTab("theme")}
                 className={`w-full px-3 py-2 rounded-lg flex items-center space-x-2
                   ${
                     activeTab === "theme"
@@ -245,19 +218,192 @@ const ConfigPanel: React.FC<ConfigPanelProps> = ({
                 <span>Standardwerte</span>
               </button>
               <button
-                onClick={() => setActiveTab("display")}
+//                onClick={() => setActiveTab("display")}
                 className={`w-full px-3 py-2 rounded-lg flex items-center space-x-2
-                  ${
-                    activeTab === "display"
-                      ? "bg-indigo-500 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                    ${
+                      activeTab === "display"
+                        ? "bg-indigo-500 text-white"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
               >
                 <Layout className="w-4 h-4" />
                 <span>Anzeige</span>
               </button>
+              <button
+                onClick={() => setActiveTab("effects")}
+                className={`w-full px-3 py-2 rounded-lg flex items-center space-x-2
+                  ${
+                    activeTab === "effects"
+                      ? "bg-indigo-500 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Status-Effekte</span>
+              </button>
             </nav>
           </div>
+
+          {/* Effects Tab Content */}
+          {activeTab === "effects" && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-medium">Status Effekte</h3>
+
+              {/* Haupt-Toggle für Effect Status */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={localConfig.effectStatus?.enabled ?? true}
+                      onChange={(e) =>
+                        setLocalConfig((prev) => ({
+                          ...prev,
+                          effectStatus: {
+                            ...prev.effectStatus,
+                            enabled: e.target.checked,
+                          },
+                        }))
+                      }
+                      className="rounded border-gray-300"
+                    />
+                    <span>Status Effekte aktivieren</span>
+                  </label>
+                </div>
+
+                {localConfig.effectStatus?.enabled && (
+                  <>
+                    {/* Display Options */}
+                    <div className="space-y-4 mt-6">
+                      <h4 className="text-sm font-medium text-gray-700">
+                        Anzeigeoptionen
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {Object.entries(
+                          localConfig.effectStatus.displayMode || {}
+                        ).map(([key, value]) => (
+                          <label
+                            key={key}
+                            className="flex items-center space-x-2"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={value}
+                              onChange={(e) =>
+                                setLocalConfig((prev) => ({
+                                  ...prev,
+                                  effectStatus: {
+                                    ...prev.effectStatus,
+                                    displayMode: {
+                                      ...prev.effectStatus.displayMode,
+                                      [key]: e.target.checked,
+                                    },
+                                  },
+                                }))
+                              }
+                              className="rounded border-gray-300"
+                            />
+                            <span>{key.replace(/([A-Z])/g, " $1").trim()}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Categories */}
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-medium text-gray-700">
+                        Kategorien
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {Object.entries(
+                          localConfig.effectStatus.categories || {}
+                        ).map(([key, value]) => (
+                          <label
+                            key={key}
+                            className="flex items-center space-x-2"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={value}
+                              onChange={(e) =>
+                                setLocalConfig((prev) => ({
+                                  ...prev,
+                                  effectStatus: {
+                                    ...prev.effectStatus,
+                                    categories: {
+                                      ...prev.effectStatus.categories,
+                                      [key]: e.target.checked,
+                                    },
+                                  },
+                                }))
+                              }
+                              className="rounded border-gray-300"
+                            />
+                            <span>
+                              {key.charAt(0).toUpperCase() + key.slice(1)}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Effect Management */}
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-medium text-gray-700">
+                        Effekt Verwaltung
+                      </h4>
+                      <div className="flex space-x-4">
+                        <button
+                          onClick={() => setActiveEffectTab("list")}
+                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                        >
+                          Effekt Liste
+                        </button>
+                        <button
+                          onClick={() => setActiveEffectTab("creator")}
+                          className="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+                        >
+                          Neuen Effekt erstellen
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Effect Management Modal */}
+          {activeEffectTab && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[60]">
+              <div className="bg-white rounded-xl w-full max-w-4xl h-[80vh] flex flex-col">
+                <div className="flex justify-between items-center p-4 border-b">
+                  <h2 className="text-xl font-bold">
+                    {activeEffectTab === "list"
+                      ? "Effekt Liste"
+                      : "Effekt erstellen"}
+                  </h2>
+                  <button
+                    onClick={handleCloseEffectManagement}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="flex-1 overflow-auto p-6">
+                  {activeEffectTab === "list" ? (
+                    <EffectListTab onEdit={handleEditEffect} />
+                  ) : (
+                    <EffectCreatorTab
+                      editEffect={editingEffect}
+                      onClose={handleCloseEffectManagement}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Main Content */}
           <div className="flex-1 p-6 overflow-y-auto">

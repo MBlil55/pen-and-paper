@@ -1,0 +1,210 @@
+/* src/components/character/DeathScreen.css */
+.death-screen-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    overflow: hidden;
+  }
+  
+  /* Background Effects */
+  .death-screen-background {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  
+  .death-screen-energy-lines {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+  }
+  
+  .energy-grid {
+    position: absolute;
+    inset: 0;
+    animation: pulse-slow 3s ease-in-out infinite;
+    background-image: 
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(239, 68, 68, 0.5) 2px, rgba(239, 68, 68, 0.5) 4px),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(239, 68, 68, 0.5) 2px, rgba(239, 68, 68, 0.5) 4px);
+    background-size: 4px 4px;
+    mask-image: radial-gradient(circle at center, black 30%, transparent 70%);
+  }
+  
+  .death-screen-vignette {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(185, 28, 28, 0.5), transparent 50%, transparent);
+  }
+  
+  /* Content */
+  .death-screen-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .death-message {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  /* Skull */
+  .skull-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .skull-glow {
+    position: absolute;
+    inset: -1rem;
+    background-color: rgba(239, 68, 68, 0.5);
+    border-radius: 9999px;
+    filter: blur(1rem);
+    animation: pulse-slow 3s ease-in-out infinite;
+  }
+  
+  .skull-icon {
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    color: rgb(239, 68, 68);
+    animation: floating 3s ease-in-out infinite;
+  }
+  
+  /* Message */
+  .message-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .death-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: rgb(239, 68, 68);
+    animation: glow 2s ease-in-out infinite;
+  }
+  
+  .death-subtitle {
+    color: rgba(239, 68, 68, 0.8);
+    font-size: 1.125rem;
+  }
+  
+  /* Revive Button */
+  .revive-button {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: rgba(239, 68, 68, 0.2);
+    border: 2px solid rgb(239, 68, 68);
+    border-radius: 0.5rem;
+    color: rgb(239, 68, 68);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  .revive-button:hover {
+    background-color: rgba(239, 68, 68, 0.3);
+  }
+  
+  .revive-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.5s;
+  }
+  
+  .revive-button:hover .revive-icon {
+    transform: rotate(180deg);
+  }
+  
+  /* Particles */
+  .particles-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: rgba(239, 68, 68, 0.3);
+    border-radius: 9999px;
+    animation: float-up linear infinite;
+  }
+  
+  /* Animations */
+  @keyframes pulse-slow {
+    0%, 100% { 
+      opacity: 0.95; 
+    }
+    50% { 
+      opacity: 0.8; 
+    }
+  }
+  
+  @keyframes floating {
+    0%, 100% { 
+      transform: translateY(0); 
+    }
+    50% { 
+      transform: translateY(-10px); 
+    }
+  }
+  
+  @keyframes glow {
+    0%, 100% { 
+      text-shadow: 0 0 20px rgba(239, 68, 68, 0.5); 
+    }
+    50% { 
+      text-shadow: 0 0 30px rgba(239, 68, 68, 0.8); 
+    }
+  }
+  
+  @keyframes float-up {
+    0% { 
+      transform: translateY(100%) translateX(0); 
+      opacity: 0; 
+    }
+    10% { 
+      opacity: 1; 
+    }
+    90% { 
+      opacity: 1; 
+    }
+    100% { 
+      transform: translateY(-100%) translateX(20px); 
+      opacity: 0; 
+    }
+  }
+  
+  @keyframes scale-up {
+    0% { 
+      transform: scale(0.9); 
+      opacity: 0; 
+    }
+    100% { 
+      transform: scale(1); 
+      opacity: 1; 
+    }
+  }
+  
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
