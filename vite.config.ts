@@ -15,8 +15,12 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+<<<<<<< HEAD
     open: true,
 	host: true
+=======
+    open: true
+>>>>>>> c835a9d7d76a4a6c23fc717868e817a25770fa73
   },
   build: {
     outDir: 'dist',

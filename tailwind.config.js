@@ -28,4 +28,8 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c835a9d7d76a4a6c23fc717868e817a25770fa73
